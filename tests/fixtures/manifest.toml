@@ -24,6 +24,14 @@ for name, expected in (("@Ada", True), ("ada@home", True), ("Ada@", True), ("Ada
     print(f'"@" in {name!r} = {contains_at}')
 
 for name, expected in (
+    ("#Ada", True), ("Ada#Lovelace", True), ("Ada#", True),
+    ("Ada-Lovelace", False), ("Ada Lovelace", False),
+):
+    contains_hash = "#" in name
+    assert contains_hash is expected
+    print(f'"#" in {name!r} = {contains_hash}')
+
+for name, expected in (
     ("Ada;Lovelace", True), (";Ada", True), ("Ada;", True),
     ("Ada", False), ("Ada Lovelace", False), ("", False),
 ):
@@ -79,6 +87,7 @@ for value, expected in (
     ("@" * 21, 21),
     ("," * 21, 21),
     (";" * 21, 21),
+    ("#" * 21, 21),
     ("A" * 20 + "1", 21),
     ("A" * 20 + "\t", 21),
     (" " + "A" * 20, 21),
@@ -99,6 +108,7 @@ for message in (
     "name must not contain a comma",
     "name must not contain a tab or newline",
     "name must not contain a semicolon",
+    "name must not contain a hash",
     "punctuation must be one of . ! ?",
 ):
     raised = ValueError(message)
@@ -149,6 +159,9 @@ for name, char in (
 case.assertTrue("x" not in (".", "!", "?"))
 print(f'"x" not in (".", "!", "?") = {"x" not in (".", "!", "?")}')
 for name, mark, message in (
+    ("#" * 21, ".", "name must be at most 20 characters"),
+    ("Ada#7", ".", "name must not contain digits"),
+    ("Ada#", "x", "name must not contain a hash"),
     ("/" * 21, ".", "name must be at most 20 characters"),
     ("Ada;/", ".", "name must not contain a semicolon"),
     ("Ada,/", ".", "name must not contain a comma"),
@@ -191,6 +204,12 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-b2fbc0497a6fd11ef9f756d5bfe0ed671eabb576551e654b5f1cb3e4ed600dc1",
+    "tool-fact-0e6b69176dca47db62cbfc7da4936e64865926b27167ae90d5ba4967744e2353",
+    "tool-fact-4fe27847cb7766a4c5ce85910b6eec084c7ea8fe6535deebc526ad6a4cbbc454",
+    "tool-fact-708d5b6ee1eca07097d09017d17faf05da3f9ce0529f0625839a7c1d04bb8849",
+    "tool-fact-352b59768c561de2c97cffc8a1816f934013afd15a012b4d76f87f45a4aef044",
+    "tool-fact-0fc8116e5053840636fedc6a0bf79b902ccadd7ade6874674cff5bb183ba83f0",
     "tool-fact-57877e781f5e6f0b2f62507aa3beefaa3df2c67acc9402c78798307e24546e3b",
     "tool-fact-13eb27b39a3f0595fd3d2494af3b547bcfee4d4b34f9ab3ddd1139c0c9c46655",
     "tool-fact-d0ac96c1fcd6265aaed758ed765265096a6e44ea903f4902201f04f810b98d1d",
