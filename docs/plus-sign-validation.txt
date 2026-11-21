@@ -1,0 +1,14 @@
+Issue 38 validation
+
+Before the fix:
+python -m unittest tests.test_greet.GreetTest.test_rejects_names_containing_plus_signs
+FAILED (failures=2): ValueError not raised for 'Ann+Bo' and '+'.
+
+After the fix:
+python -m unittest discover -s tests -t .
+Ran 17 tests in 0.000s
+OK
+
+The new test checks both rejected inputs, the exact ValueError message,
+and greet("Ann") == "Hello, Ann." through the public interface.
+Both runs used PYTHONDONTWRITEBYTECODE=1 to avoid writing bytecode caches.
