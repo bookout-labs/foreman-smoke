@@ -111,6 +111,21 @@ class GreetTest(unittest.TestCase):
                     greet(name, mark)
                 self.assertEqual(str(error.exception), message)
 
+    def test_rejects_percent_signs_and_greets_plain_names(self):
+        for name, mark, message in (
+            ("Ann%Bo", ".", "name must not contain a percent sign"),
+            ("%", ".", "name must not contain a percent sign"),
+            ("Ann%", "x", "name must not contain a percent sign"),
+            ("Ann#%", ".", "name must not contain a hash"),
+            ("Ann%7", ".", "name must not contain digits"),
+            ("%" * 21, ".", "name must be at most 20 characters"),
+        ):
+            with self.subTest(name=name, punctuation=mark):
+                with self.assertRaises(ValueError) as error:
+                    greet(name, mark)
+                self.assertEqual(str(error.exception), message)
+        self.assertEqual(greet("Ann"), "Hello, Ann.")
+
     def test_greets_names_containing_backslashes(self):
         self.assertEqual(greet("Ada\\Lovelace"), "Hello, Ada\\Lovelace.")
 

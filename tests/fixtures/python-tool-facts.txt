@@ -1,4 +1,7 @@
 3.12.14 (main, Aug 12 2026, 13:57:54) [Clang 21.0.0 (clang-2100.3.34.2)]
+"%" in 'Ann%Bo' = True
+"%" in '%' = True
+"%" in 'Ann' = False
 Code points satisfying "0" <= char <= "9" across all 1114112 Python code points:
 ['U+0030', 'U+0031', 'U+0032', 'U+0033', 'U+0034', 'U+0035', 'U+0036', 'U+0037', 'U+0038', 'U+0039']
 U+0040 '@': "0" <= char <= "9" = False

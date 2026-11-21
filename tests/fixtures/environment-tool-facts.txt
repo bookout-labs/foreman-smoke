@@ -1,0 +1,5 @@
+3.12.14 (main, Aug 12 2026, 13:57:54) [Clang 21.0.0 (clang-2100.3.34.2)]
+git version 2.56.0
+git diff --check: no whitespace errors; exit status = 0
+PYTHONDONTWRITEBYTECODE=unset: .pyc written = True
+PYTHONDONTWRITEBYTECODE=1: .pyc written = False

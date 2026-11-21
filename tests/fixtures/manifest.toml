@@ -7,6 +7,11 @@ import sys
 import unittest
 
 print(sys.version)
+for name, expected in (("Ann%Bo", True), ("%", True), ("Ann", False)):
+    contains_percent = "%" in name
+    assert contains_percent is expected
+    print(f'"%" in {name!r} = {contains_percent}')
+
 matching_code_points = [
     point for point in range(sys.maxunicode + 1) if "0" <= chr(point) <= "9"
 ]
@@ -204,6 +209,9 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-70f05516c13171bfaff0e20279304d93f198b46ee1e7c3dd6d4f819e2af4bc9e",
+    "tool-fact-7f74234489970dc9a752b4abf56c18174ef92fc64dc2e57dc800c163c527a63b",
+    "tool-fact-4d87671f82da20f1ae39e7d9902e7479a45cc32443af91e34c8048218d7ba21c",
     "tool-fact-b2fbc0497a6fd11ef9f756d5bfe0ed671eabb576551e654b5f1cb3e4ed600dc1",
     "tool-fact-0e6b69176dca47db62cbfc7da4936e64865926b27167ae90d5ba4967744e2353",
     "tool-fact-4fe27847cb7766a4c5ce85910b6eec084c7ea8fe6535deebc526ad6a4cbbc454",
@@ -256,4 +264,46 @@ claim_ids = [
     "tool-fact-0bedc2a1845fdfed05c5fea830c8d41b289d4502598a3b6cedc0c27079ef6ca7",
     "tool-fact-b6c5a83b927703ecbc47299d70684356a477242d22065ddb7f89e5fa60ab517c",
     "tool-fact-67f2ad038df305dd653ffbb05438df082b82120695fa87fd05afa325791fed5f",
+]
+
+[fixtures."environment-tool-facts.txt"]
+tool = "python"
+version = "3.12.14"
+kind = "captured_run"
+argv = ["python", "-c", '''
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
+
+print(sys.version)
+print(subprocess.check_output(["git", "--version"], text=True).strip())
+result = subprocess.run(["git", "diff", "--check"], capture_output=True, text=True)
+assert result.returncode == 0, result.stdout + result.stderr
+assert result.stdout == result.stderr == ""
+print("git diff --check: no whitespace errors; exit status = 0")
+
+with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"]) as directory:
+    root = Path(directory)
+    (root / "bytecode_probe.py").write_text("value = 42\n")
+    env = os.environ.copy()
+    env.pop("PYTHONDONTWRITEBYTECODE", None)
+    env.pop("PYTHONPYCACHEPREFIX", None)
+    for disabled in (False, True):
+        if disabled:
+            shutil.rmtree(root / "__pycache__")
+            env["PYTHONDONTWRITEBYTECODE"] = "1"
+        subprocess.run(
+            [sys.executable, "-c", "import bytecode_probe; assert bytecode_probe.value == 42"],
+            cwd=root, env=env, check=True,
+        )
+        written = bool(list(root.rglob("*.pyc")))
+        assert written is not disabled
+        print(f"PYTHONDONTWRITEBYTECODE={'1' if disabled else 'unset'}: .pyc written = {written}")
+''']
+claim_ids = [
+    "tool-fact-b0392ad7d34ee2a6fabc7ff9475128244a53c902db9fcb95e2484f7c5cb48269",
+    "tool-fact-4eea5374780415a57177908f8b869d979ec0eb8821dbf8bdd3d0d91ef8527b12",
 ]
