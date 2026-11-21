@@ -1,4 +1,9 @@
 3.12.14 (main, Aug 12 2026, 13:57:54) [Clang 21.0.0 (clang-2100.3.34.2)]
+Code points satisfying "0" <= char <= "9" across all 1114112 Python code points:
+['U+0030', 'U+0031', 'U+0032', 'U+0033', 'U+0034', 'U+0035', 'U+0036', 'U+0037', 'U+0038', 'U+0039']
+U+0662 '٢': "0" <= char <= "9" = False
+U+FF12 '２': "0" <= char <= "9" = False
+U+00B2 '²': "0" <= char <= "9" = False
 ''.strip() = ''; bool = False
 '   '.strip() = ''; bool = False
 '\t\n'.strip() = ''; bool = False
@@ -6,6 +11,7 @@
 ' \t\nAda \t\n'.strip() = 'Ada'; bool = True
 len('AAAAAAAAAAAAAAAAAAAA') = 20
 len('AAAAAAAAAAAAAAAAAAAAA') = 21
+len('AAAAAAAAAAAAAAAAAAAA1') = 21
 len(' AAAAAAAAAAAAAAAAAAAA') = 21
 len('Bartholomew Montgomery') = 22
 len('😀') = 1
@@ -14,6 +20,8 @@ assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not be empty'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must be at most 20 characters'
+assertRaises.exception type = ValueError
+str(assertRaises.exception) = 'name must not contain digits'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'punctuation must be one of . ! ?'
 ',' not in ('.', '!', '?') = True

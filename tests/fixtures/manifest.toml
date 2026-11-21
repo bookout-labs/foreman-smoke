@@ -7,6 +7,17 @@ import sys
 import unittest
 
 print(sys.version)
+matching_code_points = [
+    point for point in range(sys.maxunicode + 1) if "0" <= chr(point) <= "9"
+]
+assert matching_code_points == list(range(0x30, 0x3A))
+print(f'Code points satisfying "0" <= char <= "9" across all {sys.maxunicode + 1} Python code points:')
+print([f"U+{point:04X}" for point in matching_code_points])
+for char in ("\u0662", "\uff12", "\u00b2"):
+    in_range = "0" <= char <= "9"
+    assert not in_range
+    print(f'U+{ord(char):04X} {char!r}: "0" <= char <= "9" = {in_range}')
+
 for value in ("", "   ", "\t\n", " " * 21, " \t\nAda \t\n"):
     result = value.strip()
     expected = "Ada" if "Ada" in value else ""
@@ -16,6 +27,7 @@ for value in ("", "   ", "\t\n", " " * 21, " \t\nAda \t\n"):
 for value, expected in (
     ("A" * 20, 20),
     ("A" * 21, 21),
+    ("A" * 20 + "1", 21),
     (" " + "A" * 20, 21),
     ("Bartholomew Montgomery", 22),
     ("\U0001f600", 1),
@@ -29,6 +41,7 @@ case = unittest.TestCase()
 for message in (
     "name must not be empty",
     "name must be at most 20 characters",
+    "name must not contain digits",
     "punctuation must be one of . ! ?",
 ):
     with case.assertRaises(ValueError) as caught:
@@ -80,6 +93,10 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-ee31dcc1935b1698595ddaba9210730958ceada1fb74fb7fab056d9c6b13d584",
+    "tool-fact-d17290d908e91619b2d483c63ecb0fca2546457367229c5635065620841df868",
+    "tool-fact-61fa7cffdd4ee90d03d80cdd705ce8cfd8894505b6ac7f2e0d6dc8cf3683180a",
+    "tool-fact-ffb253732b7df5761e878be791f794c54d613800e5923c7e9ea97efac3d41bc3",
     "tool-fact-1afc20737daaea33e9cd808bacc274917a48362c0eeb2faa6d627ab8218baaf2",
     "tool-fact-8db2c55e023856f4551df129809573e24f1c4860a92a7a28baf20c7f644370a5",
     "tool-fact-4582fa92e0943ca6d7962a436c612f916c43dcc70bac8d71b6173ed528e8da16",
