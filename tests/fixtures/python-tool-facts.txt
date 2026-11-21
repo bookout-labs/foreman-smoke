@@ -2,9 +2,18 @@
 ''.strip() = ''; bool = False
 '   '.strip() = ''; bool = False
 '\t\n'.strip() = ''; bool = False
+'                     '.strip() = ''; bool = False
 ' \t\nAda \t\n'.strip() = 'Ada'; bool = True
+len('AAAAAAAAAAAAAAAAAAAA') = 20
+len('AAAAAAAAAAAAAAAAAAAAA') = 21
+len(' AAAAAAAAAAAAAAAAAAAA') = 21
+len('Bartholomew Montgomery') = 22
+len('😀') = 1
+len('é') = 2
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not be empty'
+assertRaises.exception type = ValueError
+str(assertRaises.exception) = 'name must be at most 20 characters'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'punctuation must be one of . ! ?'
 ',' not in ('.', '!', '?') = True
