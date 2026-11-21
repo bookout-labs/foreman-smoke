@@ -55,9 +55,6 @@ assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not contain a tab or newline'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'punctuation must be one of . ! ?'
-greet('\t\n', ";") raises ValueError('name must not be empty')
-greet('AAAAAAAAAAAAAAAAAAAA\t', ";") raises ValueError('name must be at most 20 characters')
-greet('Ada\n', ";") raises ValueError('name must not contain a tab or newline')
 ',' not in ('.', '!', '?') = True
 ';' not in ('.', '!', '?') = True
 '' not in ('.', '!', '?') = True

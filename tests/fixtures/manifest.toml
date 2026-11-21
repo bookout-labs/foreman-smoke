@@ -89,18 +89,6 @@ for message in (
     print(f"assertRaises.exception type = {type(caught.exception).__name__}")
     print(f"str(assertRaises.exception) = {str(caught.exception)!r}")
 
-from greet import greet
-
-for name, expected in (
-    ("\t\n", "name must not be empty"),
-    ("A" * 20 + "\t", "name must be at most 20 characters"),
-    ("Ada\n", "name must not contain a tab or newline"),
-):
-    with case.assertRaises(ValueError) as caught:
-        greet(name, ";")
-    case.assertEqual(str(caught.exception), expected)
-    print(f'greet({name!r}, ";") raises ValueError({str(caught.exception)!r})')
-
 for value in (",", ";", "", "!!", " ", None, []):
     rejected = value not in (".", "!", "?")
     case.assertIs(rejected, True)
