@@ -28,6 +28,33 @@ class GreetTest(unittest.TestCase):
                     greet(name, mark)
                 self.assertEqual(str(error.exception), "name must not contain digits")
 
+    def test_rejects_names_containing_an_asterisk_with_validation_precedence(self):
+        for name in ("Ann*", "*Bo", "  Ann*  ", "\t*Bo\n"):
+            with self.subTest(name=name):
+                with self.assertRaises(ValueError) as error:
+                    greet(name)
+                self.assertEqual(
+                    str(error.exception), "name must not contain an asterisk"
+                )
+        self.assertEqual(greet("Ann"), "Hello, Ann.")
+
+        for name, mark, message in (
+            ("Ada*7", ".", "name must not contain digits"),
+            ("Ada*@", ".", "name must not contain @"),
+            ("Ada,*", ".", "name must not contain a comma"),
+            ("Ada\t*", ".", "name must not contain a tab or newline"),
+            ("Ada\n*", ".", "name must not contain a tab or newline"),
+            ("Ada;*", ".", "name must not contain a semicolon"),
+            ("Ada/*", ".", "name must not contain a slash"),
+            ("Ada#*", ".", "name must not contain a hash"),
+            ("Ada*", "x", "name must not contain an asterisk"),
+            ("*" * 21, ".", "name must be at most 20 characters"),
+        ):
+            with self.subTest(name=name, punctuation=mark):
+                with self.assertRaises(ValueError) as error:
+                    greet(name, mark)
+                self.assertEqual(str(error.exception), message)
+
     def test_rejects_names_containing_at_sign(self):
         for name, mark in (("ada@home", "."), ("@Ada", "!"), ("Ada@", ",")):
             with self.subTest(name=name, punctuation=mark):

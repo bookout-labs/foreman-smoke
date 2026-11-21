@@ -7,6 +7,14 @@ import sys
 import unittest
 
 print(sys.version)
+for value, expected in (("  Ann*  ", "Ann*"), ("\t*Bo\n", "*Bo")):
+    actual = value.strip()
+    assert actual == expected
+    print(f"{value!r}.strip() = {actual!r}")
+for name, expected in (("Ann*", True), ("*Bo", True), ("Ann", False)):
+    actual = "*" in name
+    assert actual is expected
+    print(f'"*" in {name!r} = {actual}')
 matching_code_points = [
     point for point in range(sys.maxunicode + 1) if "0" <= chr(point) <= "9"
 ]
@@ -213,6 +221,10 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-fdda07970b48ae1e5ac70abf28800009f4ff0fd60d8b8b6483e09349e1f533e6",
+    "tool-fact-fc8c02eb452603e24732cbb7abeef2288d5dacb2f375a809d31383fc908980d8",
+    "tool-fact-06cdbd1b0fb14dcc33920cfb88f76c81c5eb0e1fd328df28159a8fe6d140e320",
+    "tool-fact-153462aac2290d95eaafe075253abcd19aa5e55c3d5914fa9f2c0f7cc3c1dafd",
     "tool-fact-b2fbc0497a6fd11ef9f756d5bfe0ed671eabb576551e654b5f1cb3e4ed600dc1",
     "tool-fact-0e6b69176dca47db62cbfc7da4936e64865926b27167ae90d5ba4967744e2353",
     "tool-fact-4fe27847cb7766a4c5ce85910b6eec084c7ea8fe6535deebc526ad6a4cbbc454",
