@@ -9,6 +9,11 @@ U+00B2 '²': "0" <= char <= "9" = False
 "@" in 'ada@home' = True
 "@" in 'Ada@' = True
 "@" in 'Ada' = False
+"#" in '#Ada' = True
+"#" in 'Ada#Lovelace' = True
+"#" in 'Ada#' = True
+"#" in 'Ada-Lovelace' = False
+"#" in 'Ada Lovelace' = False
 ";" in 'Ada;Lovelace' = True
 ";" in ';Ada' = True
 ";" in 'Ada;' = True
@@ -48,6 +53,7 @@ len('AAAAAAAAAAAAAAAAAAAAA') = 21
 len('@@@@@@@@@@@@@@@@@@@@@') = 21
 len(',,,,,,,,,,,,,,,,,,,,,') = 21
 len(';;;;;;;;;;;;;;;;;;;;;') = 21
+len('#####################') = 21
 len('AAAAAAAAAAAAAAAAAAAA1') = 21
 len('AAAAAAAAAAAAAAAAAAAA\t') = 21
 len(' AAAAAAAAAAAAAAAAAAAA') = 21
@@ -68,6 +74,8 @@ assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not contain a tab or newline'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not contain a semicolon'
+assertRaises.exception type = ValueError
+str(assertRaises.exception) = 'name must not contain a hash'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'punctuation must be one of . ! ?'
 ',' not in ('.', '!', '?') = True
@@ -92,6 +100,9 @@ len("/" * 21) = 21
 '\t' in 'Ada/\t' = True
 '\n' in 'Ada/\n' = True
 "x" not in (".", "!", "?") = True
+greet('#####################', '.') raises ValueError('name must be at most 20 characters')
+greet('Ada#7', '.') raises ValueError('name must not contain digits')
+greet('Ada#', 'x') raises ValueError('name must not contain a hash')
 greet('/////////////////////', '.') raises ValueError('name must be at most 20 characters')
 greet('Ada;/', '.') raises ValueError('name must not contain a semicolon')
 greet('Ada,/', '.') raises ValueError('name must not contain a comma')
