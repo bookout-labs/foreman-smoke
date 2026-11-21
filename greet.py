@@ -13,6 +13,8 @@ def greet(name: str, punctuation: str = ".") -> str:
         raise ValueError("name must not contain a tab or newline")
     if ";" in name:
         raise ValueError("name must not contain a semicolon")
+    if "/" in name:
+        raise ValueError("name must not contain a slash")
     if punctuation not in (".", "!", "?"):
         raise ValueError("punctuation must be one of . ! ?")
     return f"Hello, {name}{punctuation}"
