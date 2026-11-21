@@ -1,0 +1,1 @@
+Foreman bot identity smoke.
