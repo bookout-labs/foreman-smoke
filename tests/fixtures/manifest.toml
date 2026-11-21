@@ -13,10 +13,15 @@ matching_code_points = [
 assert matching_code_points == list(range(0x30, 0x3A))
 print(f'Code points satisfying "0" <= char <= "9" across all {sys.maxunicode + 1} Python code points:')
 print([f"U+{point:04X}" for point in matching_code_points])
-for char in ("\u0662", "\uff12", "\u00b2"):
+for char in ("@", "\u0662", "\uff12", "\u00b2"):
     in_range = "0" <= char <= "9"
     assert not in_range
     print(f'U+{ord(char):04X} {char!r}: "0" <= char <= "9" = {in_range}')
+
+for name, expected in (("@Ada", True), ("ada@home", True), ("Ada@", True), ("Ada", False)):
+    contains_at = "@" in name
+    assert contains_at is expected
+    print(f'"@" in {name!r} = {contains_at}')
 
 for value in ("", "   ", "\t\n", " " * 21, " \t\nAda \t\n"):
     result = value.strip()
@@ -27,6 +32,7 @@ for value in ("", "   ", "\t\n", " " * 21, " \t\nAda \t\n"):
 for value, expected in (
     ("A" * 20, 20),
     ("A" * 21, 21),
+    ("@" * 21, 21),
     ("A" * 20 + "1", 21),
     (" " + "A" * 20, 21),
     ("Bartholomew Montgomery", 22),
@@ -42,14 +48,28 @@ for message in (
     "name must not be empty",
     "name must be at most 20 characters",
     "name must not contain digits",
+    "name must not contain @",
     "punctuation must be one of . ! ?",
 ):
+    raised = ValueError(message)
     with case.assertRaises(ValueError) as caught:
-        raise ValueError(message)
+        raise raised
+    case.assertIs(caught.exception, raised)
     case.assertIsInstance(caught.exception, ValueError)
     case.assertEqual(str(caught.exception), message)
     print(f"assertRaises.exception type = {type(caught.exception).__name__}")
     print(f"str(assertRaises.exception) = {str(caught.exception)!r}")
+
+from greet import greet
+
+for name, expected in (
+    ("ada@home", "name must not contain @"),
+    ("@" * 21, "name must be at most 20 characters"),
+):
+    with case.assertRaises(ValueError) as caught:
+        greet(name)
+    case.assertEqual(str(caught.exception), expected)
+    print(f"greet({name!r}) raises ValueError({str(caught.exception)!r})")
 
 for value in (",", "", "!!", " ", None, []):
     rejected = value not in (".", "!", "?")
@@ -93,6 +113,11 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-c46949b3982224658ad93b26589495074588dc08ce485b57d0f4cb2fc4838d98",
+    "tool-fact-731d02adb5e4ae45979d3128a6a0ada0aeba6897ab6130e4faa7d78073170969",
+    "tool-fact-6e26d0b45cff274565b0bb0b639e288e2406c7449bc440c786d4019a97a94e36",
+    "tool-fact-bade6b3d7cde42cb0447ad416bfaaf837d506ea43b315fadc9d15831df223b5b",
+    "tool-fact-b155a2fd92d8deaf08535404155cc892a2ba0d9159676e7e41f2e8aa53490987",
     "tool-fact-ee31dcc1935b1698595ddaba9210730958ceada1fb74fb7fab056d9c6b13d584",
     "tool-fact-d17290d908e91619b2d483c63ecb0fca2546457367229c5635065620841df868",
     "tool-fact-61fa7cffdd4ee90d03d80cdd705ce8cfd8894505b6ac7f2e0d6dc8cf3683180a",
