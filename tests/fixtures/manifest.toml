@@ -1,0 +1,28 @@
+[fixtures."python-tool-facts.txt"]
+tool = "python"
+version = "3.12.14"
+kind = "captured_run"
+argv = ["python", "-c", '''
+import sys
+import unittest
+
+print(sys.version)
+for value in ("", "   ", "\t\n", " \t\nAda \t\n"):
+    result = value.strip()
+    expected = "Ada" if "Ada" in value else ""
+    assert result == expected
+    print(f"{value!r}.strip() = {result!r}; bool = {bool(result)}")
+
+message = "name must not be empty"
+case = unittest.TestCase()
+with case.assertRaises(ValueError) as caught:
+    raise ValueError(message)
+case.assertIsInstance(caught.exception, ValueError)
+case.assertEqual(str(caught.exception), message)
+print(f"assertRaises.exception type = {type(caught.exception).__name__}")
+print(f"str(assertRaises.exception) = {str(caught.exception)!r}")
+''']
+claim_ids = [
+    "tool-fact-1189b917f7520890c3abfbe9844c2e667f91433f66bae4dd8242a4221bfb44c3",
+    "tool-fact-3f87abefb3ead3a006da0db968328f35942885e3d74c98f03c2e15d0dcbc48f8",
+]
