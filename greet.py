@@ -4,6 +4,8 @@ def greet(name: str, punctuation: str = ".") -> str:
     if len(name) > 20:
         raise ValueError("name must be at most 20 characters")
     name = name.strip()
+    if "*" in name:
+        raise ValueError("name must not contain an asterisk")
     if any("0" <= char <= "9" for char in name):
         raise ValueError("name must not contain digits")
     if "@" in name:

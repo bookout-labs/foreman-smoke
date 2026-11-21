@@ -28,6 +28,16 @@ class GreetTest(unittest.TestCase):
                     greet(name, mark)
                 self.assertEqual(str(error.exception), "name must not contain digits")
 
+    def test_rejects_names_containing_an_asterisk(self):
+        for name in ("Ann*", "*Bo", "  Ann*  ", "\t*Bo\n"):
+            with self.subTest(name=name):
+                with self.assertRaises(ValueError) as error:
+                    greet(name)
+                self.assertEqual(
+                    str(error.exception), "name must not contain an asterisk"
+                )
+        self.assertEqual(greet("Ann"), "Hello, Ann.")
+
     def test_rejects_names_containing_at_sign(self):
         for name, mark in (("ada@home", "."), ("@Ada", "!"), ("Ada@", ",")):
             with self.subTest(name=name, punctuation=mark):
