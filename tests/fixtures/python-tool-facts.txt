@@ -5,3 +5,17 @@
 ' \t\nAda \t\n'.strip() = 'Ada'; bool = True
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not be empty'
+assertRaises.exception type = ValueError
+str(assertRaises.exception) = 'punctuation must be one of . ! ?'
+',' not in ('.', '!', '?') = True
+'' not in ('.', '!', '?') = True
+'!!' not in ('.', '!', '?') = True
+' ' not in ('.', '!', '?') = True
+None not in ('.', '!', '?') = True
+[] not in ('.', '!', '?') = True
+tuple membership equality comparisons = ['.', '!']
+subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=0): failed
+subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=1): passed
+subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=2): passed
+visited after intentional subTest failure = [0, 1, 2]
+test methods run = 1; recorded failures = 1

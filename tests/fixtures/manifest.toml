@@ -13,16 +13,61 @@ for value in ("", "   ", "\t\n", " \t\nAda \t\n"):
     assert result == expected
     print(f"{value!r}.strip() = {result!r}; bool = {bool(result)}")
 
-message = "name must not be empty"
 case = unittest.TestCase()
-with case.assertRaises(ValueError) as caught:
-    raise ValueError(message)
-case.assertIsInstance(caught.exception, ValueError)
-case.assertEqual(str(caught.exception), message)
-print(f"assertRaises.exception type = {type(caught.exception).__name__}")
-print(f"str(assertRaises.exception) = {str(caught.exception)!r}")
+for message in ("name must not be empty", "punctuation must be one of . ! ?"):
+    with case.assertRaises(ValueError) as caught:
+        raise ValueError(message)
+    case.assertIsInstance(caught.exception, ValueError)
+    case.assertEqual(str(caught.exception), message)
+    print(f"assertRaises.exception type = {type(caught.exception).__name__}")
+    print(f"str(assertRaises.exception) = {str(caught.exception)!r}")
+
+for value in (",", "", "!!", " ", None, []):
+    rejected = value not in (".", "!", "?")
+    case.assertIs(rejected, True)
+    print(f"{value!r} not in ('.', '!', '?') = {rejected}")
+
+comparisons = []
+class EqualityProbe:
+    def __eq__(self, other):
+        comparisons.append(other)
+        return other == "!"
+
+case.assertIn(EqualityProbe(), (".", "!", "?"))
+case.assertEqual(comparisons, [".", "!"])
+print(f"tuple membership equality comparisons = {comparisons!r}")
+
+visited = []
+reported = []
+class SubTestProbe(unittest.TestCase):
+    def test_loop(self):
+        for value in range(3):
+            with self.subTest(value=value):
+                visited.append(value)
+                self.assertNotEqual(value, 0)
+
+class RecordingResult(unittest.TestResult):
+    def addSubTest(self, test, subtest, err):
+        reported.append((str(subtest), "passed" if err is None else "failed"))
+        super().addSubTest(test, subtest, err)
+
+result = RecordingResult()
+SubTestProbe("test_loop").run(result)
+case.assertEqual(visited, [0, 1, 2])
+case.assertEqual([status for _, status in reported], ["failed", "passed", "passed"])
+case.assertEqual(result.testsRun, 1)
+case.assertEqual(len(result.failures), 1)
+case.assertEqual(len(result.errors), 0)
+for subtest, status in reported:
+    print(f"subTest report: {subtest}: {status}")
+print(f"visited after intentional subTest failure = {visited!r}")
+print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
     "tool-fact-1189b917f7520890c3abfbe9844c2e667f91433f66bae4dd8242a4221bfb44c3",
     "tool-fact-3f87abefb3ead3a006da0db968328f35942885e3d74c98f03c2e15d0dcbc48f8",
+    "tool-fact-d78f279214f717aee9dc76703c19a71013e752861bfda779784efae251c147a3",
+    "tool-fact-0bedc2a1845fdfed05c5fea830c8d41b289d4502598a3b6cedc0c27079ef6ca7",
+    "tool-fact-b6c5a83b927703ecbc47299d70684356a477242d22065ddb7f89e5fa60ab517c",
+    "tool-fact-67f2ad038df305dd653ffbb05438df082b82120695fa87fd05afa325791fed5f",
 ]
