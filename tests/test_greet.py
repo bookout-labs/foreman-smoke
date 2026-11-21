@@ -9,13 +9,20 @@ class GreetTest(unittest.TestCase):
         self.assertEqual(greet("Jean-Luc", "?"), "Hello, Jean-Luc?")
 
     def test_rejects_names_containing_ascii_digits(self):
-        cases = [("R2D2", "."), ("Ada 2", "!"), ("Ada3", ",")]
+        cases = [("R2D2", "."), ("Ada 2", "!"), ("Ada3", ","), ("Ada@2", ".")]
         cases.extend((f"Ada{digit}", ".") for digit in "0123456789")
         for name, mark in cases:
             with self.subTest(name=name, punctuation=mark):
                 with self.assertRaises(ValueError) as error:
                     greet(name, mark)
                 self.assertEqual(str(error.exception), "name must not contain digits")
+
+    def test_rejects_names_containing_at_sign(self):
+        for name, mark in (("ada@home", "."), ("@Ada", "!"), ("Ada@", ",")):
+            with self.subTest(name=name, punctuation=mark):
+                with self.assertRaises(ValueError) as error:
+                    greet(name, mark)
+                self.assertEqual(str(error.exception), "name must not contain @")
 
     def test_greets_names_containing_non_ascii_digits(self):
         for name in ("Ada٢", "Ada２", "Ada²"):
@@ -27,7 +34,13 @@ class GreetTest(unittest.TestCase):
         self.assertEqual(greet("A" * 20, "!"), "Hello, AAAAAAAAAAAAAAAAAAAA!")
 
     def test_rejects_names_over_length_limit_without_trimming(self):
-        for name in ("A" * 21, "Bartholomew Montgomery", " " + "A" * 20, "A" * 20 + "1"):
+        for name in (
+            "A" * 21,
+            "Bartholomew Montgomery",
+            " " + "A" * 20,
+            "A" * 20 + "1",
+            "@" * 21,
+        ):
             for mark in (".", ","):
                 with self.subTest(name=name, punctuation=mark):
                     with self.assertRaises(ValueError) as error:
