@@ -268,17 +268,3 @@ claim_ids = [
     "tool-fact-b6c5a83b927703ecbc47299d70684356a477242d22065ddb7f89e5fa60ab517c",
     "tool-fact-67f2ad038df305dd653ffbb05438df082b82120695fa87fd05afa325791fed5f",
 ]
-
-[fixtures."git-diff-check.txt"]
-tool = "python"
-version = "3.12.14"
-kind = "captured_run"
-argv = ["python", "-c", '''
-import subprocess
-
-subprocess.run(["git", "--version"], check=True)
-result = subprocess.run(["git", "diff", "--check"])
-print(f"git diff --check exit code: {result.returncode}")
-raise SystemExit(result.returncode)
-''']
-claim_ids = ["tool-fact-9aab0fa939bb8d81f393814930f9c5d56b26bdde077daae265e942156d302829"]

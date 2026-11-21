@@ -1,2 +1,0 @@
-git version 2.56.0
-git diff --check exit code: 0
