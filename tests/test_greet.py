@@ -7,6 +7,10 @@ class GreetTest(unittest.TestCase):
     def test_greets_by_name(self):
         self.assertEqual(greet("Ada"), "Hello, Ada.")
 
+    def test_title_cases_names(self):
+        self.assertEqual(greet("ada lovelace"), "Hello, Ada Lovelace.")
+        self.assertEqual(greet("ADA"), "Hello, Ada.")
+
     def test_rejects_empty_or_whitespace_only_names(self):
         for name in ("", "   ", "\t\n"):
             with self.subTest(name=name):
