@@ -9,6 +9,13 @@ U+00B2 '²': "0" <= char <= "9" = False
 "@" in 'ada@home' = True
 "@" in 'Ada@' = True
 "@" in 'Ada' = False
+"," in 'Ada,Bob' = True
+"," in ',Ada' = True
+"," in 'Ada,' = True
+"," in 'Ada,@' = True
+"," in 'Ada,7' = True
+"," in 'Ada' = False
+"," in 'Jean-Luc' = False
 ''.strip() = ''; bool = False
 '   '.strip() = ''; bool = False
 '\t\n'.strip() = ''; bool = False
@@ -17,6 +24,7 @@ U+00B2 '²': "0" <= char <= "9" = False
 len('AAAAAAAAAAAAAAAAAAAA') = 20
 len('AAAAAAAAAAAAAAAAAAAAA') = 21
 len('@@@@@@@@@@@@@@@@@@@@@') = 21
+len(',,,,,,,,,,,,,,,,,,,,,') = 21
 len('AAAAAAAAAAAAAAAAAAAA1') = 21
 len(' AAAAAAAAAAAAAAAAAAAA') = 21
 len('Bartholomew Montgomery') = 22
@@ -31,8 +39,11 @@ str(assertRaises.exception) = 'name must not contain digits'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not contain @'
 assertRaises.exception type = ValueError
+str(assertRaises.exception) = 'name must not contain a comma'
+assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'punctuation must be one of . ! ?'
 ',' not in ('.', '!', '?') = True
+';' not in ('.', '!', '?') = True
 '' not in ('.', '!', '?') = True
 '!!' not in ('.', '!', '?') = True
 ' ' not in ('.', '!', '?') = True
@@ -40,7 +51,7 @@ None not in ('.', '!', '?') = True
 [] not in ('.', '!', '?') = True
 tuple membership equality comparisons = ['.', '!']
 subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=0): failed
-subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=1): passed
+subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=1): failed
 subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=2): passed
 visited after intentional subTest failure = [0, 1, 2]
-test methods run = 1; recorded failures = 1
+test methods run = 1; recorded failures = 2

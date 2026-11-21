@@ -24,6 +24,20 @@ class GreetTest(unittest.TestCase):
                     greet(name, mark)
                 self.assertEqual(str(error.exception), "name must not contain @")
 
+    def test_rejects_names_containing_commas_with_validation_precedence(self):
+        for name, mark, message in (
+            ("Ada,Bob", ".", "name must not contain a comma"),
+            (",Ada", "!", "name must not contain a comma"),
+            ("Ada,", ";", "name must not contain a comma"),
+            ("Ada,@", ".", "name must not contain @"),
+            ("Ada,7", ".", "name must not contain digits"),
+            ("," * 21, ".", "name must be at most 20 characters"),
+        ):
+            with self.subTest(name=name, punctuation=mark):
+                with self.assertRaises(ValueError) as error:
+                    greet(name, mark)
+                self.assertEqual(str(error.exception), message)
+
     def test_greets_names_containing_non_ascii_digits(self):
         for name in ("Ada٢", "Ada２", "Ada²"):
             with self.subTest(name=name):

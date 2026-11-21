@@ -7,6 +7,8 @@ def greet(name: str, punctuation: str = ".") -> str:
         raise ValueError("name must not contain digits")
     if "@" in name:
         raise ValueError("name must not contain @")
+    if "," in name:
+        raise ValueError("name must not contain a comma")
     if punctuation not in (".", "!", "?"):
         raise ValueError("punctuation must be one of . ! ?")
     return f"Hello, {name}{punctuation}"
