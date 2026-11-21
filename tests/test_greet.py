@@ -10,6 +10,15 @@ class GreetTest(unittest.TestCase):
         self.assertEqual(greet("Ada Lovelace"), "Hello, Ada Lovelace.")
         self.assertEqual(greet("Ada-Lovelace"), "Hello, Ada-Lovelace.")
 
+    def test_greets_with_surrounding_whitespace_removed(self):
+        for name, expected in (
+            ("  Ann  ", "Hello, Ann."),
+            ("\tBo\n", "Hello, Bo."),
+            ("Ann", "Hello, Ann."),
+        ):
+            with self.subTest(name=name):
+                self.assertEqual(greet(name), expected)
+
     def test_rejects_names_containing_ascii_digits(self):
         cases = [("R2D2", "."), ("Ada 2", "!"), ("Ada3", ","), ("Ada@2", ".")]
         cases.extend((f"Ada{digit}", ".") for digit in "0123456789")
@@ -41,11 +50,17 @@ class GreetTest(unittest.TestCase):
                 self.assertEqual(str(error.exception), message)
 
     def test_rejects_tabs_or_newlines_with_validation_precedence(self):
+        for name, mark, expected in (
+            ("\tAda", ".", "Hello, Ada."),
+            ("Ada\n", "!", "Hello, Ada!"),
+        ):
+            with self.subTest(name=name, punctuation=mark):
+                self.assertEqual(greet(name, mark), expected)
+
         for name, mark, message in (
             ("Ada\tLovelace", ".", "name must not contain a tab or newline"),
             ("Ada\nLovelace", "!", "name must not contain a tab or newline"),
-            ("\tAda", ".", "name must not contain a tab or newline"),
-            ("Ada\n", ";", "name must not contain a tab or newline"),
+            ("Ada\n", ";", "punctuation must be one of . ! ?"),
             ("Ada,\t", ".", "name must not contain a comma"),
             ("Ada\t7", ".", "name must not contain digits"),
             ("Ada@\n", ".", "name must not contain @"),
@@ -62,8 +77,10 @@ class GreetTest(unittest.TestCase):
             ("Ada;Lovelace", ".", "name must not contain a semicolon"),
             (";Ada", "!", "name must not contain a semicolon"),
             ("Ada;", "x", "name must not contain a semicolon"),
-            ("Ada;\t", ".", "name must not contain a tab or newline"),
-            ("Ada;\n", ".", "name must not contain a tab or newline"),
+            ("Ada;\t", ".", "name must not contain a semicolon"),
+            ("Ada;\n", ".", "name must not contain a semicolon"),
+            ("Ada\t;", ".", "name must not contain a tab or newline"),
+            ("Ada\n;", ".", "name must not contain a tab or newline"),
             ("Ada,;", ".", "name must not contain a comma"),
             ("Ada;7", ".", "name must not contain digits"),
             ("Ada;@", ".", "name must not contain @"),
@@ -83,8 +100,10 @@ class GreetTest(unittest.TestCase):
             ("Ada,/", ".", "name must not contain a comma"),
             ("Ada/7", ".", "name must not contain digits"),
             ("Ada/@", ".", "name must not contain @"),
-            ("Ada/\t", ".", "name must not contain a tab or newline"),
-            ("Ada/\n", ".", "name must not contain a tab or newline"),
+            ("Ada/\t", ".", "name must not contain a slash"),
+            ("Ada/\n", ".", "name must not contain a slash"),
+            ("Ada\t/", ".", "name must not contain a tab or newline"),
+            ("Ada\n/", ".", "name must not contain a tab or newline"),
             ("/" * 21, ".", "name must be at most 20 characters"),
         ):
             with self.subTest(name=name, punctuation=mark):

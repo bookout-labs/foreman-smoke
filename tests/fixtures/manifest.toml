@@ -138,6 +138,15 @@ print(f"tuple membership equality comparisons = {comparisons!r}")
 from greet import greet
 
 for name, expected in (
+    ("  Ann  ", "Hello, Ann."),
+    ("\tBo\n", "Hello, Bo."),
+    ("Ann", "Hello, Ann."),
+):
+    actual = greet(name)
+    case.assertEqual(actual, expected)
+    print(f'greet({name!r}) = {actual!r}')
+
+for name, expected in (
     ("/Ada", True), ("Ada/Lovelace", True), ("Ada/", True),
     ("Ada", False), ("Ada\\Lovelace", False),
 ):
@@ -166,8 +175,8 @@ for name, mark, message in (
     ("Ada;/", ".", "name must not contain a semicolon"),
     ("Ada,/", ".", "name must not contain a comma"),
     ("Ada/@", ".", "name must not contain @"),
-    ("Ada/\t", ".", "name must not contain a tab or newline"),
-    ("Ada/\n", ".", "name must not contain a tab or newline"),
+    ("Ada/\t", ".", "name must not contain a slash"),
+    ("Ada/\n", ".", "name must not contain a slash"),
     ("Ada/7", ".", "name must not contain digits"),
     ("Ada/", "x", "name must not contain a slash"),
     ("Ada", "x", "punctuation must be one of . ! ?"),
