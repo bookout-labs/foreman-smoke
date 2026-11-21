@@ -78,6 +78,29 @@ str(assertRaises.exception) = 'punctuation must be one of . ! ?'
 None not in ('.', '!', '?') = True
 [] not in ('.', '!', '?') = True
 tuple membership equality comparisons = ['.', '!']
+"/" in '/Ada' = True
+"/" in 'Ada/Lovelace' = True
+"/" in 'Ada/' = True
+"/" in 'Ada' = False
+"/" in 'Ada\\Lovelace' = False
+backslash = U+005C; slash = U+002F
+greet backslash name = 'Hello, Ada\\Lovelace.'
+len("/" * 21) = 21
+';' in 'Ada;/' = True
+',' in 'Ada,/' = True
+'@' in 'Ada/@' = True
+'\t' in 'Ada/\t' = True
+'\n' in 'Ada/\n' = True
+"x" not in (".", "!", "?") = True
+greet('/////////////////////', '.') raises ValueError('name must be at most 20 characters')
+greet('Ada;/', '.') raises ValueError('name must not contain a semicolon')
+greet('Ada,/', '.') raises ValueError('name must not contain a comma')
+greet('Ada/@', '.') raises ValueError('name must not contain @')
+greet('Ada/\t', '.') raises ValueError('name must not contain a tab or newline')
+greet('Ada/\n', '.') raises ValueError('name must not contain a tab or newline')
+greet('Ada/7', '.') raises ValueError('name must not contain digits')
+greet('Ada/', 'x') raises ValueError('name must not contain a slash')
+greet('Ada', 'x') raises ValueError('punctuation must be one of . ! ?')
 subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=0): failed
 subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=1): failed
 subTest report: test_loop (__main__.SubTestProbe.test_loop) (value=2): passed

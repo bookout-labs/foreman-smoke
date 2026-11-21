@@ -125,6 +125,45 @@ case.assertIn(EqualityProbe(), (".", "!", "?"))
 case.assertEqual(comparisons, [".", "!"])
 print(f"tuple membership equality comparisons = {comparisons!r}")
 
+from greet import greet
+
+for name, expected in (
+    ("/Ada", True), ("Ada/Lovelace", True), ("Ada/", True),
+    ("Ada", False), ("Ada\\Lovelace", False),
+):
+    contains_slash = "/" in name
+    case.assertIs(contains_slash, expected)
+    print(f'"/" in {name!r} = {contains_slash}')
+case.assertNotEqual(ord("\\"), ord("/"))
+print(f'backslash = U+{ord(chr(92)):04X}; slash = U+{ord("/"):04X}')
+case.assertEqual(greet("Ada\\Lovelace"), "Hello, Ada\\Lovelace.")
+print(f'greet backslash name = {greet("Ada\\Lovelace")!r}')
+case.assertEqual(len("/" * 21), 21)
+print(f'len("/" * 21) = {len("/" * 21)}')
+for name, char in (
+    ("Ada;/", ";"), ("Ada,/", ","), ("Ada/@", "@"),
+    ("Ada/\t", "\t"), ("Ada/\n", "\n"),
+):
+    case.assertIn(char, name)
+    print(f'{char!r} in {name!r} = {char in name}')
+case.assertTrue("x" not in (".", "!", "?"))
+print(f'"x" not in (".", "!", "?") = {"x" not in (".", "!", "?")}')
+for name, mark, message in (
+    ("/" * 21, ".", "name must be at most 20 characters"),
+    ("Ada;/", ".", "name must not contain a semicolon"),
+    ("Ada,/", ".", "name must not contain a comma"),
+    ("Ada/@", ".", "name must not contain @"),
+    ("Ada/\t", ".", "name must not contain a tab or newline"),
+    ("Ada/\n", ".", "name must not contain a tab or newline"),
+    ("Ada/7", ".", "name must not contain digits"),
+    ("Ada/", "x", "name must not contain a slash"),
+    ("Ada", "x", "punctuation must be one of . ! ?"),
+):
+    with case.assertRaises(ValueError) as caught:
+        greet(name, mark)
+    case.assertEqual(str(caught.exception), message)
+    print(f'greet({name!r}, {mark!r}) raises ValueError({str(caught.exception)!r})')
+
 visited = []
 reported = []
 class SubTestProbe(unittest.TestCase):
@@ -152,6 +191,14 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-57877e781f5e6f0b2f62507aa3beefaa3df2c67acc9402c78798307e24546e3b",
+    "tool-fact-13eb27b39a3f0595fd3d2494af3b547bcfee4d4b34f9ab3ddd1139c0c9c46655",
+    "tool-fact-d0ac96c1fcd6265aaed758ed765265096a6e44ea903f4902201f04f810b98d1d",
+    "tool-fact-9d0c42accf75c9f429361b1b2996fba24da798d1ad9688af96d6e49f6cfb4d56",
+    "tool-fact-4c0d9ea64be621b49d93fdff68eb17d88dbc31af9330689cc95c495fa430604f",
+    "tool-fact-85d692c8c42998e30b95fca3485cde765baab38b412e3c0605160943561c4a62",
+    "tool-fact-b617f1e1fe793609829b48a31292753ce2ba4c6a4bae674dfbc6d85fe8a63b47",
+    "tool-fact-67cd557e11d985751c85109ecde7b53a550f9b125820c6b614989ea2e3e8ee2f",
     "tool-fact-8264e9f1bfb76f44a0b4b4e4de9511e1ca657c506596944e60a81ec001b695b8",
     "tool-fact-9fc16e32810403c1ccfbee4ab10d83acd2e99dcec227bfdd53b4923bc1395c72",
     "tool-fact-e9928de2cbe0a5c33c3bf07e72a866eec561f83e878682aa82b70dba0d104998",
