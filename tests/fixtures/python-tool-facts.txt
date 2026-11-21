@@ -16,6 +16,16 @@ U+00B2 '²': "0" <= char <= "9" = False
 "," in 'Ada,7' = True
 "," in 'Ada' = False
 "," in 'Jean-Luc' = False
+'\t' in '\tAda' = True
+'\t' in 'Ada\tLovelace' = True
+'\t' in 'Ada\t' = True
+'\t' in 'Ada Lovelace' = False
+'\t' in '' = False
+'\n' in '\nAda' = True
+'\n' in 'Ada\nLovelace' = True
+'\n' in 'Ada\n' = True
+'\n' in 'Ada Lovelace' = False
+'\n' in '' = False
 ''.strip() = ''; bool = False
 '   '.strip() = ''; bool = False
 '\t\n'.strip() = ''; bool = False
@@ -26,6 +36,7 @@ len('AAAAAAAAAAAAAAAAAAAAA') = 21
 len('@@@@@@@@@@@@@@@@@@@@@') = 21
 len(',,,,,,,,,,,,,,,,,,,,,') = 21
 len('AAAAAAAAAAAAAAAAAAAA1') = 21
+len('AAAAAAAAAAAAAAAAAAAA\t') = 21
 len(' AAAAAAAAAAAAAAAAAAAA') = 21
 len('Bartholomew Montgomery') = 22
 len('😀') = 1
@@ -40,6 +51,8 @@ assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not contain @'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not contain a comma'
+assertRaises.exception type = ValueError
+str(assertRaises.exception) = 'name must not contain a tab or newline'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'punctuation must be one of . ! ?'
 ',' not in ('.', '!', '?') = True

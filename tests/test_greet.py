@@ -7,6 +7,7 @@ class GreetTest(unittest.TestCase):
     def test_greets_by_name(self):
         self.assertEqual(greet("Ada"), "Hello, Ada.")
         self.assertEqual(greet("Jean-Luc", "?"), "Hello, Jean-Luc?")
+        self.assertEqual(greet("Ada Lovelace"), "Hello, Ada Lovelace.")
 
     def test_rejects_names_containing_ascii_digits(self):
         cases = [("R2D2", "."), ("Ada 2", "!"), ("Ada3", ","), ("Ada@2", ".")]
@@ -32,6 +33,23 @@ class GreetTest(unittest.TestCase):
             ("Ada,@", ".", "name must not contain @"),
             ("Ada,7", ".", "name must not contain digits"),
             ("," * 21, ".", "name must be at most 20 characters"),
+        ):
+            with self.subTest(name=name, punctuation=mark):
+                with self.assertRaises(ValueError) as error:
+                    greet(name, mark)
+                self.assertEqual(str(error.exception), message)
+
+    def test_rejects_tabs_or_newlines_with_validation_precedence(self):
+        for name, mark, message in (
+            ("Ada\tLovelace", ".", "name must not contain a tab or newline"),
+            ("Ada\nLovelace", "!", "name must not contain a tab or newline"),
+            ("\tAda", ".", "name must not contain a tab or newline"),
+            ("Ada\n", ";", "name must not contain a tab or newline"),
+            ("Ada,\t", ".", "name must not contain a comma"),
+            ("Ada\t7", ".", "name must not contain digits"),
+            ("Ada@\n", ".", "name must not contain @"),
+            ("A" * 20 + "\t", ".", "name must be at most 20 characters"),
+            ("\t\n", ".", "name must not be empty"),
         ):
             with self.subTest(name=name, punctuation=mark):
                 with self.assertRaises(ValueError) as error:
