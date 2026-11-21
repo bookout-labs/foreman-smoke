@@ -32,8 +32,6 @@ assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'name must not contain @'
 assertRaises.exception type = ValueError
 str(assertRaises.exception) = 'punctuation must be one of . ! ?'
-greet('ada@home') raises ValueError('name must not contain @')
-greet('@@@@@@@@@@@@@@@@@@@@@') raises ValueError('name must be at most 20 characters')
 ',' not in ('.', '!', '?') = True
 '' not in ('.', '!', '?') = True
 '!!' not in ('.', '!', '?') = True

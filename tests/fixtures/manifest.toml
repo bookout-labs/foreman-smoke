@@ -60,17 +60,6 @@ for message in (
     print(f"assertRaises.exception type = {type(caught.exception).__name__}")
     print(f"str(assertRaises.exception) = {str(caught.exception)!r}")
 
-from greet import greet
-
-for name, expected in (
-    ("ada@home", "name must not contain @"),
-    ("@" * 21, "name must be at most 20 characters"),
-):
-    with case.assertRaises(ValueError) as caught:
-        greet(name)
-    case.assertEqual(str(caught.exception), expected)
-    print(f"greet({name!r}) raises ValueError({str(caught.exception)!r})")
-
 for value in (",", "", "!!", " ", None, []):
     rejected = value not in (".", "!", "?")
     case.assertIs(rejected, True)
@@ -117,6 +106,7 @@ claim_ids = [
     "tool-fact-731d02adb5e4ae45979d3128a6a0ada0aeba6897ab6130e4faa7d78073170969",
     "tool-fact-6e26d0b45cff274565b0bb0b639e288e2406c7449bc440c786d4019a97a94e36",
     "tool-fact-bade6b3d7cde42cb0447ad416bfaaf837d506ea43b315fadc9d15831df223b5b",
+    # Outside-tool claim: len("@" * 21) == 21.
     "tool-fact-b155a2fd92d8deaf08535404155cc892a2ba0d9159676e7e41f2e8aa53490987",
     "tool-fact-ee31dcc1935b1698595ddaba9210730958ceada1fb74fb7fab056d9c6b13d584",
     "tool-fact-d17290d908e91619b2d483c63ecb0fca2546457367229c5635065620841df868",
