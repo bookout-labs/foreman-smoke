@@ -23,6 +23,19 @@ for name, expected in (("@Ada", True), ("ada@home", True), ("Ada@", True), ("Ada
     assert contains_at is expected
     print(f'"@" in {name!r} = {contains_at}')
 
+for name, expected in (
+    ("Ada,Bob", True),
+    (",Ada", True),
+    ("Ada,", True),
+    ("Ada,@", True),
+    ("Ada,7", True),
+    ("Ada", False),
+    ("Jean-Luc", False),
+):
+    contains_comma = "," in name
+    assert contains_comma is expected
+    print(f'"," in {name!r} = {contains_comma}')
+
 for value in ("", "   ", "\t\n", " " * 21, " \t\nAda \t\n"):
     result = value.strip()
     expected = "Ada" if "Ada" in value else ""
@@ -33,6 +46,7 @@ for value, expected in (
     ("A" * 20, 20),
     ("A" * 21, 21),
     ("@" * 21, 21),
+    ("," * 21, 21),
     ("A" * 20 + "1", 21),
     (" " + "A" * 20, 21),
     ("Bartholomew Montgomery", 22),
@@ -49,6 +63,7 @@ for message in (
     "name must be at most 20 characters",
     "name must not contain digits",
     "name must not contain @",
+    "name must not contain a comma",
     "punctuation must be one of . ! ?",
 ):
     raised = ValueError(message)
@@ -60,7 +75,7 @@ for message in (
     print(f"assertRaises.exception type = {type(caught.exception).__name__}")
     print(f"str(assertRaises.exception) = {str(caught.exception)!r}")
 
-for value in (",", "", "!!", " ", None, []):
+for value in (",", ";", "", "!!", " ", None, []):
     rejected = value not in (".", "!", "?")
     case.assertIs(rejected, True)
     print(f"{value!r} not in ('.', '!', '?') = {rejected}")
@@ -82,7 +97,7 @@ class SubTestProbe(unittest.TestCase):
         for value in range(3):
             with self.subTest(value=value):
                 visited.append(value)
-                self.assertNotEqual(value, 0)
+                self.assertEqual(value, 2)
 
 class RecordingResult(unittest.TestResult):
     def addSubTest(self, test, subtest, err):
@@ -92,9 +107,9 @@ class RecordingResult(unittest.TestResult):
 result = RecordingResult()
 SubTestProbe("test_loop").run(result)
 case.assertEqual(visited, [0, 1, 2])
-case.assertEqual([status for _, status in reported], ["failed", "passed", "passed"])
+case.assertEqual([status for _, status in reported], ["failed", "failed", "passed"])
 case.assertEqual(result.testsRun, 1)
-case.assertEqual(len(result.failures), 1)
+case.assertEqual(len(result.failures), 2)
 case.assertEqual(len(result.errors), 0)
 for subtest, status in reported:
     print(f"subTest report: {subtest}: {status}")
@@ -102,6 +117,11 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-f69882c31474a28b92ef7b2ec79811fe7abd61de37c6a17f6db1102f9c32e3b0",
+    "tool-fact-b3370fb7c8c88cd052fe9c1b47bf078546a455f0266fb81710ff6616b833728c",
+    "tool-fact-0b2a76d2b4e309aad33120399cd937bee22932872c6c7f469bd2b5ee2255d6f0",
+    "tool-fact-7a332a567c9bbfaf2d712604f877260433a86dea8c0fc169e562daf1e37f1eaa",
+    "tool-fact-92be468240f22d37e4d2ae61ba2de6425af8a0c603585d26de107a5fb03293bc",
     "tool-fact-c46949b3982224658ad93b26589495074588dc08ce485b57d0f4cb2fc4838d98",
     "tool-fact-731d02adb5e4ae45979d3128a6a0ada0aeba6897ab6130e4faa7d78073170969",
     "tool-fact-6e26d0b45cff274565b0bb0b639e288e2406c7449bc440c786d4019a97a94e36",
