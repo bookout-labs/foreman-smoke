@@ -6,13 +6,28 @@ from greet import greet
 class GreetTest(unittest.TestCase):
     def test_greets_by_name(self):
         self.assertEqual(greet("Ada"), "Hello, Ada.")
+        self.assertEqual(greet("Jean-Luc", "?"), "Hello, Jean-Luc?")
+
+    def test_rejects_names_containing_ascii_digits(self):
+        cases = [("R2D2", "."), ("Ada 2", "!"), ("Ada3", ",")]
+        cases.extend((f"Ada{digit}", ".") for digit in "0123456789")
+        for name, mark in cases:
+            with self.subTest(name=name, punctuation=mark):
+                with self.assertRaises(ValueError) as error:
+                    greet(name, mark)
+                self.assertEqual(str(error.exception), "name must not contain digits")
+
+    def test_greets_names_containing_non_ascii_digits(self):
+        for name in ("Ada٢", "Ada２", "Ada²"):
+            with self.subTest(name=name):
+                self.assertEqual(greet(name), f"Hello, {name}.")
 
     def test_greets_names_at_length_limit(self):
         self.assertEqual(greet("A" * 20), "Hello, AAAAAAAAAAAAAAAAAAAA.")
         self.assertEqual(greet("A" * 20, "!"), "Hello, AAAAAAAAAAAAAAAAAAAA!")
 
     def test_rejects_names_over_length_limit_without_trimming(self):
-        for name in ("A" * 21, "Bartholomew Montgomery", " " + "A" * 20):
+        for name in ("A" * 21, "Bartholomew Montgomery", " " + "A" * 20, "A" * 20 + "1"):
             for mark in (".", ","):
                 with self.subTest(name=name, punctuation=mark):
                     with self.assertRaises(ValueError) as error:
