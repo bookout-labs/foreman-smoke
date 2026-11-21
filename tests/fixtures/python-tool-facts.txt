@@ -1,0 +1,7 @@
+3.12.14 (main, Aug 12 2026, 13:57:54) [Clang 21.0.0 (clang-2100.3.34.2)]
+''.strip() = ''; bool = False
+'   '.strip() = ''; bool = False
+'\t\n'.strip() = ''; bool = False
+' \t\nAda \t\n'.strip() = 'Ada'; bool = True
+assertRaises.exception type = ValueError
+str(assertRaises.exception) = 'name must not be empty'
