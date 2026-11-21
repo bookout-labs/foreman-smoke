@@ -7,6 +7,11 @@ import sys
 import unittest
 
 print(sys.version)
+for name, expected in (("Ann+Bo", True), ("+", True), ("Ann", False)):
+    contains_plus = "+" in name
+    assert contains_plus is expected
+    print(f'"+" in {name!r} = {contains_plus}')
+
 matching_code_points = [
     point for point in range(sys.maxunicode + 1) if "0" <= chr(point) <= "9"
 ]
@@ -109,6 +114,7 @@ for message in (
     "name must not contain a tab or newline",
     "name must not contain a semicolon",
     "name must not contain a hash",
+    "name must not contain a plus sign",
     "punctuation must be one of . ! ?",
 ):
     raised = ValueError(message)
@@ -204,6 +210,9 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-7dc08dd25d88d6cd892317131d81197b495914c35d38a7e307a61f342a2fc253",
+    "tool-fact-45717823904748607ae80840d092cb58fd1bd3f7f9fbd2b4feeba35095133b67",
+    "tool-fact-02409df90aa3a6cb90433f9a09fa493a3556c9617c7407858a951402041faa47",
     "tool-fact-b2fbc0497a6fd11ef9f756d5bfe0ed671eabb576551e654b5f1cb3e4ed600dc1",
     "tool-fact-0e6b69176dca47db62cbfc7da4936e64865926b27167ae90d5ba4967744e2353",
     "tool-fact-4fe27847cb7766a4c5ce85910b6eec084c7ea8fe6535deebc526ad6a4cbbc454",
