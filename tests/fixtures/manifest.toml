@@ -1,3 +1,56 @@
+[fixtures."python-caret-tool-facts.txt"]
+tool = "python"
+version = "3.12.14"
+kind = "captured_run"
+argv = ["python", "-c", '''
+import sys
+import unittest
+
+print(sys.version)
+case = unittest.TestCase()
+for name, expected in (("Ann^", True), ("^Bo", True), ("An^n", True), ("Ann", False)):
+    actual = "^" in name
+    case.assertIs(actual, expected)
+    print(f'"^" in {name!r} = {actual}')
+
+raised = ValueError("name must not contain a caret")
+with case.assertRaises(ValueError) as caught:
+    raise raised
+case.assertIs(caught.exception, raised)
+case.assertEqual(str(caught.exception), "name must not contain a caret")
+print(f"assertRaises.exception is raised ValueError: {caught.exception is raised}")
+print(f"str(assertRaises.exception) = {str(caught.exception)!r}")
+
+visited = []
+reported = []
+class SubTestProbe(unittest.TestCase):
+    def test_names(self):
+        for name in ("Ann^", "^Bo"):
+            with self.subTest(name=name):
+                visited.append(name)
+                self.assertEqual(name, "^Bo")
+
+class RecordingResult(unittest.TestResult):
+    def addSubTest(self, test, subtest, err):
+        reported.append((str(subtest), "passed" if err is None else "failed"))
+        super().addSubTest(test, subtest, err)
+
+result = RecordingResult()
+SubTestProbe("test_names").run(result)
+case.assertEqual(visited, ["Ann^", "^Bo"])
+case.assertEqual([status for _, status in reported], ["failed", "passed"])
+case.assertEqual(len(result.failures), 1)
+case.assertEqual(len(result.errors), 0)
+for subtest, status in reported:
+    print(f"subTest report: {subtest}: {status}")
+print(f"visited after intentional first subTest failure = {visited!r}")
+''']
+claim_ids = [
+    "tool-fact-4b20e23013ea23cd00a79c52f923f20b1a1e3af4a0f5c608ee625c3697cf7a90",
+    "tool-fact-5993d685ae4357ba3165a92f0762d9be2b40b4cc2d66b5ee2cf1620d64150701",
+    "tool-fact-41def8fad883e2591b9559d24af794af31315587569a25d187fcb741eca1b9d5",
+]
+
 [fixtures."python-tool-facts.txt"]
 tool = "python"
 version = "3.12.14"

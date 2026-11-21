@@ -133,6 +133,14 @@ class GreetTest(unittest.TestCase):
     def test_greets_names_containing_backslashes(self):
         self.assertEqual(greet("Ada\\Lovelace"), "Hello, Ada\\Lovelace.")
 
+    def test_rejects_names_containing_a_caret(self):
+        for name in ("Ann^", "^Bo"):
+            with self.subTest(name=name):
+                with self.assertRaises(ValueError) as error:
+                    greet(name)
+                self.assertEqual(str(error.exception), "name must not contain a caret")
+        self.assertEqual(greet("Ann"), "Hello, Ann.")
+
     def test_greets_names_containing_non_ascii_digits(self):
         for name in ("Ada٢", "Ada２", "Ada²"):
             with self.subTest(name=name):
