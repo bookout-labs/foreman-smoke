@@ -7,6 +7,14 @@ import sys
 import unittest
 
 print(sys.version)
+for name, expected in (
+    ("&Ann", True), ("Ann&Bo", True), ("Ann&", True), ("&", True),
+    ("Ann", False), ("", False),
+):
+    contains_ampersand = "&" in name
+    assert contains_ampersand is expected
+    print(f'"&" in {name!r} = {contains_ampersand}')
+
 matching_code_points = [
     point for point in range(sys.maxunicode + 1) if "0" <= chr(point) <= "9"
 ]
@@ -204,6 +212,9 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-214f77538ecca9718a00e94de18f532534908afb7a978d92f1011719623b5b4e",
+    "tool-fact-1da264272357f37cfec2ba5c7e58b572449e1d865cebfd6258ae66393261ada6",
+    "tool-fact-48567296321007a6c7e2f1a99cfd0d108ea5b7e2b9677d4f7625a98336b040a2",
     "tool-fact-b2fbc0497a6fd11ef9f756d5bfe0ed671eabb576551e654b5f1cb3e4ed600dc1",
     "tool-fact-0e6b69176dca47db62cbfc7da4936e64865926b27167ae90d5ba4967744e2353",
     "tool-fact-4fe27847cb7766a4c5ce85910b6eec084c7ea8fe6535deebc526ad6a4cbbc454",
