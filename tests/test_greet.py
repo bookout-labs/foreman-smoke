@@ -111,6 +111,27 @@ class GreetTest(unittest.TestCase):
                     greet(name, mark)
                 self.assertEqual(str(error.exception), message)
 
+    def test_rejects_plus_signs_with_validation_precedence(self):
+        for name, mark, message in (
+            ("Ann+Bo", ".", "name must not contain a plus sign"),
+            ("+", ".", "name must not contain a plus sign"),
+            ("Ann+", "x", "name must not contain a plus sign"),
+            ("Ann#+", ".", "name must not contain a hash"),
+            ("Ann/+", ".", "name must not contain a slash"),
+            ("Ann;+", ".", "name must not contain a semicolon"),
+            ("Ann\t+", ".", "name must not contain a tab or newline"),
+            ("Ann\n+", ".", "name must not contain a tab or newline"),
+            ("Ann,+", ".", "name must not contain a comma"),
+            ("Ann@+", ".", "name must not contain @"),
+            ("Ann+7", ".", "name must not contain digits"),
+            ("+" * 21, ".", "name must be at most 20 characters"),
+        ):
+            with self.subTest(name=name, punctuation=mark):
+                with self.assertRaises(ValueError) as error:
+                    greet(name, mark)
+                self.assertEqual(str(error.exception), message)
+        self.assertEqual(greet("Ann"), "Hello, Ann.")
+
     def test_greets_names_containing_backslashes(self):
         self.assertEqual(greet("Ada\\Lovelace"), "Hello, Ada\\Lovelace.")
 
