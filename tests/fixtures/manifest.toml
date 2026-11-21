@@ -24,6 +24,25 @@ for name, expected in (("@Ada", True), ("ada@home", True), ("Ada@", True), ("Ada
     print(f'"@" in {name!r} = {contains_at}')
 
 for name, expected in (
+    ("Ada;Lovelace", True), (";Ada", True), ("Ada;", True),
+    ("Ada", False), ("Ada Lovelace", False), ("", False),
+):
+    contains_semicolon = ";" in name
+    assert contains_semicolon is expected
+    print(f'";" in {name!r} = {contains_semicolon}')
+
+for name, char in (
+    ("Ada;\t", "\t"),
+    ("Ada;\n", "\n"),
+    ("Ada,;", ","),
+    ("Ada;@", "@"),
+    ("Ada;7", "7"),
+    (";" * 21, ";"),
+):
+    assert char in name
+    print(f'{char!r} in {name!r} = {char in name}')
+
+for name, expected in (
     ("Ada,Bob", True),
     (",Ada", True),
     ("Ada,", True),
@@ -59,6 +78,7 @@ for value, expected in (
     ("A" * 21, 21),
     ("@" * 21, 21),
     ("," * 21, 21),
+    (";" * 21, 21),
     ("A" * 20 + "1", 21),
     ("A" * 20 + "\t", 21),
     (" " + "A" * 20, 21),
@@ -78,6 +98,7 @@ for message in (
     "name must not contain @",
     "name must not contain a comma",
     "name must not contain a tab or newline",
+    "name must not contain a semicolon",
     "punctuation must be one of . ! ?",
 ):
     raised = ValueError(message)
@@ -131,6 +152,12 @@ print(f"visited after intentional subTest failure = {visited!r}")
 print(f"test methods run = {result.testsRun}; recorded failures = {len(result.failures)}")
 ''']
 claim_ids = [
+    "tool-fact-8264e9f1bfb76f44a0b4b4e4de9511e1ca657c506596944e60a81ec001b695b8",
+    "tool-fact-9fc16e32810403c1ccfbee4ab10d83acd2e99dcec227bfdd53b4923bc1395c72",
+    "tool-fact-e9928de2cbe0a5c33c3bf07e72a866eec561f83e878682aa82b70dba0d104998",
+    "tool-fact-5dcdc6a0bf5c4f76c7efefd5b0e1793f7de2047e8179aeeddaaa017e2c8a0471",
+    "tool-fact-4f77853354162959c6cbe0557dd61e88ecce0b2ddee8e6daa5b80136a4695313",
+    "tool-fact-c53c6f73ec5691e5566ef63b594b800b847664c6de4a0d4f9550c0d73c198772",
     "tool-fact-ef71c743fb6e4e9e92f72d6b2bf575d7c43eaeb0d20e8569a0ccf4b00f17b28f",
     "tool-fact-023711293c15d2c226394ce2e97f102e38d8eefc444d321b2962bf57e73ffe5a",
     "tool-fact-a45f305e310a8d5564c525d5de35e7e787e93f6bb578e7c20f5475fb720a3f92",

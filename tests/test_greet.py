@@ -56,6 +56,23 @@ class GreetTest(unittest.TestCase):
                     greet(name, mark)
                 self.assertEqual(str(error.exception), message)
 
+    def test_rejects_semicolons_with_validation_precedence(self):
+        for name, mark, message in (
+            ("Ada;Lovelace", ".", "name must not contain a semicolon"),
+            (";Ada", "!", "name must not contain a semicolon"),
+            ("Ada;", "x", "name must not contain a semicolon"),
+            ("Ada;\t", ".", "name must not contain a tab or newline"),
+            ("Ada;\n", ".", "name must not contain a tab or newline"),
+            ("Ada,;", ".", "name must not contain a comma"),
+            ("Ada;7", ".", "name must not contain digits"),
+            ("Ada;@", ".", "name must not contain @"),
+            (";" * 21, ".", "name must be at most 20 characters"),
+        ):
+            with self.subTest(name=name, punctuation=mark):
+                with self.assertRaises(ValueError) as error:
+                    greet(name, mark)
+                self.assertEqual(str(error.exception), message)
+
     def test_greets_names_containing_non_ascii_digits(self):
         for name in ("Ada٢", "Ada２", "Ada²"):
             with self.subTest(name=name):
