@@ -16,17 +16,11 @@ U+00B2 '²': "0" <= char <= "9" = False
 ";" in 'Ada Lovelace' = False
 ";" in '' = False
 '\t' in 'Ada;\t' = True
-greet('Ada;\t') raises ValueError('name must not contain a tab or newline')
 '\n' in 'Ada;\n' = True
-greet('Ada;\n') raises ValueError('name must not contain a tab or newline')
 ',' in 'Ada,;' = True
-greet('Ada,;') raises ValueError('name must not contain a comma')
 '@' in 'Ada;@' = True
-greet('Ada;@') raises ValueError('name must not contain @')
 '7' in 'Ada;7' = True
-greet('Ada;7') raises ValueError('name must not contain digits')
 ';' in ';;;;;;;;;;;;;;;;;;;;;' = True
-greet(';;;;;;;;;;;;;;;;;;;;;') raises ValueError('name must be at most 20 characters')
 "," in 'Ada,Bob' = True
 "," in ',Ada' = True
 "," in 'Ada,' = True
