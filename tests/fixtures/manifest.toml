@@ -1,3 +1,59 @@
+[fixtures."python-tilde-tool-facts.txt"]
+tool = "python"
+version = "3.12.14"
+kind = "captured_run"
+argv = ["python", "-c", '''
+import sys
+import unittest
+
+print(sys.version)
+case = unittest.TestCase()
+for name, expected in (("Ann~", True), ("~Bo", True), ("An~n", True), ("  Ann~  ", True), ("Ann", False)):
+    trimmed = name.strip()
+    actual = "~" in trimmed
+    case.assertIs(actual, expected)
+    print(f'{name!r}.strip() = {trimmed!r}; "~" in trimmed = {actual}')
+case.assertEqual("  Ann~  ".strip(), "Ann~")
+
+raised = ValueError("name must not contain a tilde")
+with case.assertRaises(ValueError) as caught:
+    raise raised
+case.assertIs(caught.exception, raised)
+case.assertEqual(str(caught.exception), "name must not contain a tilde")
+print(f"assertRaises.exception is raised ValueError: {caught.exception is raised}")
+print(f"str(assertRaises.exception) = {str(caught.exception)!r}")
+
+visited = []
+reported = []
+class SubTestProbe(unittest.TestCase):
+    def test_names(self):
+        for name in ("Ann~", "~Bo", "  Ann~  "):
+            with self.subTest(name=name):
+                visited.append(name)
+                self.assertEqual(name, "  Ann~  ")
+
+class RecordingResult(unittest.TestResult):
+    def addSubTest(self, test, subtest, err):
+        reported.append((str(subtest), "passed" if err is None else "failed"))
+        super().addSubTest(test, subtest, err)
+
+result = RecordingResult()
+SubTestProbe("test_names").run(result)
+case.assertEqual(visited, ["Ann~", "~Bo", "  Ann~  "])
+case.assertEqual([status for _, status in reported], ["failed", "failed", "passed"])
+case.assertEqual(len(result.failures), 2)
+case.assertEqual(len(result.errors), 0)
+for subtest, status in reported:
+    print(f"subTest report: {subtest}: {status}")
+print(f"visited after intentional subTest failures = {visited!r}")
+''']
+claim_ids = [
+    "tool-fact-0b5fb8684c4861a64f9cfaefede050bef21c860adae033cfea9499ac6bdb8bd7",
+    "tool-fact-95cf1a040a5e5a529fe2c9fa42ec25a77b0ae02f6b6d158a524a8e0a5419211f",
+    "tool-fact-27235a1fb5e34bb33fc00b552c2f72201696161a767fd2ddfb9c29047f5f5a52",
+    "tool-fact-2415f39c1f125e8e0995c0be2abaf6b27fe98ef32f17e000009aee7d3b1bea29",
+]
+
 [fixtures."python-caret-tool-facts.txt"]
 tool = "python"
 version = "3.12.14"
