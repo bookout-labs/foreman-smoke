@@ -141,6 +141,14 @@ class GreetTest(unittest.TestCase):
                 self.assertEqual(str(error.exception), "name must not contain a caret")
         self.assertEqual(greet("Ann"), "Hello, Ann.")
 
+    def test_rejects_names_containing_a_tilde(self):
+        for name in ("Ann~", "~Bo", "  Ann~  "):
+            with self.subTest(name=name):
+                with self.assertRaises(ValueError) as error:
+                    greet(name)
+                self.assertEqual(str(error.exception), "name must not contain a tilde")
+        self.assertEqual(greet("Ann"), "Hello, Ann.")
+
     def test_greets_names_containing_non_ascii_digits(self):
         for name in ("Ada٢", "Ada２", "Ada²"):
             with self.subTest(name=name):

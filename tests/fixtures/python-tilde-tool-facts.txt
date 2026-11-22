@@ -1,0 +1,12 @@
+3.12.14 (main, Aug 12 2026, 13:57:54) [Clang 21.0.0 (clang-2100.3.34.2)]
+'Ann~'.strip() = 'Ann~'; "~" in trimmed = True
+'~Bo'.strip() = '~Bo'; "~" in trimmed = True
+'An~n'.strip() = 'An~n'; "~" in trimmed = True
+'  Ann~  '.strip() = 'Ann~'; "~" in trimmed = True
+'Ann'.strip() = 'Ann'; "~" in trimmed = False
+assertRaises.exception is raised ValueError: True
+str(assertRaises.exception) = 'name must not contain a tilde'
+subTest report: test_names (__main__.SubTestProbe.test_names) (name='Ann~'): failed
+subTest report: test_names (__main__.SubTestProbe.test_names) (name='~Bo'): failed
+subTest report: test_names (__main__.SubTestProbe.test_names) (name='  Ann~  '): passed
+visited after intentional subTest failures = ['Ann~', '~Bo', '  Ann~  ']
