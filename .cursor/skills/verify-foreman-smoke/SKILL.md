@@ -15,7 +15,7 @@ From the repository root, with Python 3.12:
 python -m unittest discover -s tests
 ```
 
-It passes when the last line is `OK` and the exit code is 0. It writes nothing to the checkout.
+It passes when the last line is `OK` and the exit code is 0. It changes no tracked file.
 
 ## Drive a criterion
 
@@ -28,4 +28,4 @@ For each criterion, record the command, its exit code and its output, and the he
 
 ## Cleanup
 
-Nothing to stop. `git status --short` must be empty afterward.
+Nothing to stop. `__pycache__/` is ignored. `git status --short` must be empty afterward.
