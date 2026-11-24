@@ -1,0 +1,2 @@
+check: python -m unittest discover -s tests
+verify_skill: .cursor/skills/verify-foreman-smoke/SKILL.md
