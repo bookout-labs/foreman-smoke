@@ -27,3 +27,16 @@ def greet(name: str, punctuation: str = ".") -> str:
     if punctuation not in (".", "!", "?"):
         raise ValueError("punctuation must be one of . ! ?")
     return f"Hello, {name}{punctuation}"
+
+
+def greet_all(names: list[str], punctuation: str = ".") -> str:
+    if not names:
+        raise ValueError("names must not be empty")
+    # Validate every name first (with valid punctuation) so a name error
+    # anywhere in the list takes precedence over a punctuation error.
+    for position, name in enumerate(names, start=1):
+        try:
+            greet(name)
+        except ValueError as error:
+            raise ValueError(f"name {position}: {error}") from None
+    return " | ".join(greet(name, punctuation) for name in names)
