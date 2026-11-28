@@ -7,6 +7,10 @@ from urllib.parse import parse_qs, urlsplit
 from greet import greet_all
 
 
+def batch_smoke_greeting(name):
+    return f"Hello, {name.strip(' ')}!"
+
+
 class Health(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/health":
@@ -18,6 +22,15 @@ class Health(BaseHTTPRequestHandler):
         url = urlsplit(self.path)
         if url.path == "/greet":
             self.greet(url.query)
+            return
+        if url.path == "/batch-smoke/greeting":
+            names = parse_qs(url.query, keep_blank_values=True).get("name", [""])
+            self.send_text(200, batch_smoke_greeting(names[0]), trailing_newline=False)
+            return
+        if url.path == "/batch-smoke/greetings":
+            names = parse_qs(url.query, keep_blank_values=True).get("name", [])
+            body = "\n".join(batch_smoke_greeting(name) for name in names)
+            self.send_text(200, body, trailing_newline=False)
             return
         self.send_error(404)
 
@@ -33,8 +46,8 @@ class Health(BaseHTTPRequestHandler):
             return
         self.send_text(200, body)
 
-    def send_text(self, status, text):
-        body = (text + "\n").encode("utf-8")
+    def send_text(self, status, text, *, trailing_newline=True):
+        body = (text + ("\n" if trailing_newline else "")).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "text/plain; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
