@@ -1,11 +1,11 @@
 ---
 name: verify-foreman-smoke
-description: Verify a change to foreman-smoke, a synthetic Python fixture with no app to start. Use to prove an acceptance criterion with the repository's own check and the files the change adds.
+description: Verify a change to foreman-smoke, a synthetic Python fixture whose only app is a health server. Use to prove an acceptance criterion with the repository's own check and the files the change adds.
 ---
 
 # Verify foreman-smoke
 
-The repository has no app, server, sign-in or secrets. A user's surface is its files and the `greet` module.
+The repository has no sign-in or secrets. Its only app is `app.py`, which answers `GET /health` and nothing else, so a user's surface is its files and the `greet` module.
 
 ## Run the check
 
