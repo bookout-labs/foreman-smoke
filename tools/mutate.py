@@ -1,5 +1,5 @@
 """Mutation tool for Foreman's contract. Reads path:line entries on standard input, one per line. For each Python source line
-outside tests/ it makes one mutation (an if condition negated, or a simple statement replaced by pass), runs the test suite,
+outside tests/ it makes one mutation (an if condition negated, or a simple statement replaced by pass), runs the contract's pytest check,
 restores the file and prints one JSON line {"line", "id", "result"}, where result is killed when the suite fails. The id is
 the path, the mutation kind and a digest of the original line, so it stays the same across runs. Exits 0 for an empty list."""
 
@@ -10,7 +10,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-TESTS = [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-q"]
+TESTS = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"]
 
 
 def mutated(text: str) -> tuple[str, str] | None:
