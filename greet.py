@@ -22,8 +22,6 @@ def greet(name: str, punctuation: str = ".") -> str:
         raise ValueError("name must not contain a caret")
     if "~" in name:
         raise ValueError("name must not contain a tilde")
-    if "|" in name:
-        raise ValueError("name must not contain a pipe")
     if punctuation not in (".", "!", "?"):
         raise ValueError("punctuation must be one of . ! ?")
     return f"Hello, {name}{punctuation}"
